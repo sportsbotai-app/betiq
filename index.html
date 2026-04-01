@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BET IQ — by SportsBotAi</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#D4920C;--gold-light:#F5C842;--gold-dim:#7A5A08;
+  --gold-bg:rgba(212,146,12,0.07);
+  --navy:#080E1A;--navy-card:#0D1525;--navy-border:#1E2E48;
+  --green:#30C870;--red:#E84060;--cyan:#5AB4E0;
+  --text:#E8EDF5;--text-muted:#607080;--text-dim:#2A3C54;
+  --r:12px;--rs:8px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--navy);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(30,46,72,0.35) 1px,transparent 1px),linear-gradient(90deg,rgba(30,46,72,0.35) 1px,transparent 1px);background-size:80px 80px;pointer-events:none;z-index:0}
+.hero{position:relative;background:linear-gradient(135deg,#09101F,#0D1428 50%,#070E1A);border-bottom:1.5px solid var(--gold);padding:28px 40px 22px;z-index:1;overflow:hidden}
+.hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 55% 75% at 50% 50%,rgba(212,146,12,0.07),transparent 70%);pointer-events:none}
+.hero-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.pill{padding:5px 18px;border-radius:20px;font-size:10px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase}
+.pill-out{border:1px solid var(--gold-dim);color:var(--gold-dim)}
+.pill-fill{background:var(--gold);color:var(--navy)}
+.hero-center{text-align:center;position:relative;z-index:2}
+.eyebrow{font-size:10px;font-weight:600;letter-spacing:6px;color:var(--gold-dim);margin-bottom:4px;text-transform:uppercase}
+.hero-logo{font-family:'Cinzel',serif;font-size:clamp(60px,9vw,100px);font-weight:900;line-height:1;color:#fff;letter-spacing:3px}
+.hero-logo span{color:var(--gold)}
+.hero-tagline{font-size:10px;letter-spacing:7px;color:var(--text-dim);margin-top:5px;text-transform:uppercase}
+.hero-divider{width:300px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:9px auto;opacity:0.35}
+.hero-by{font-size:11px;font-weight:300;letter-spacing:5px;color:var(--text-muted);text-transform:uppercase}
+.hero-by strong{font-weight:600;color:#8898A8}
+.hero-icons{display:flex;justify-content:center;gap:28px;margin-top:18px;padding-top:16px;border-top:1px solid rgba(212,146,12,0.14)}
+.hi{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer}
+.hi-circle{width:46px;height:46px;border-radius:50%;border:1px solid var(--gold-dim);display:flex;align-items:center;justify-content:center;font-size:19px;transition:all 0.2s}
+.hi:hover .hi-circle{border-color:var(--gold);background:var(--gold-bg)}
+.hi-label{font-size:8.5px;font-weight:600;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase}
+.nav-wrap{position:sticky;top:0;z-index:100;background:rgba(8,14,26,0.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--navy-border)}
+.nav{max-width:1100px;margin:0 auto;padding:0 24px;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav-tab{flex-shrink:0;padding:14px 20px;background:none;border:none;border-bottom:2px solid transparent;color:var(--text-muted);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:7px;white-space:nowrap}
+.nav-tab:hover{color:var(--gold)}
+.nav-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.main{max-width:1100px;margin:0 auto;padding:28px 24px 100px;position:relative;z-index:1}
+.section{display:none}
+.section.active{display:block}
+.usage{display:flex;align-items:center;gap:12px;padding:10px 18px;background:var(--navy-card);border:1px solid var(--navy-border);border-radius:30px;margin-bottom:22px;font-size:12px;color:var(--text-muted)}
+.dots{display:flex;gap:5px}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--navy-border)}
+.dot.on{background:var(--gold)}
+.upg{margin-left:auto;font-size:12px;font-weight:600;color:var(--gold);cursor:pointer;border:none;background:none;font-family:'DM Sans',sans-serif}
+.card{background:var(--navy-card);border:1px solid var(--navy-border);border-radius:var(--r);padding:24px;margin-bottom:20px}
+.card-label{font-size:10px;font-weight:600;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;margin-bottom:12px}
+.sport-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:8px;margin-bottom:18px}
+.sport-btn{padding:10px 4px 8px;border-radius:var(--rs);border:1px solid var(--navy-border);background:transparent;color:var(--text-muted);font-family:'DM Sans',sans-serif;font-size:10.5px;font-weight:500;cursor:pointer;text-align:center;transition:all 0.15s}
+.sport-btn span{display:block;font-size:20px;margin-bottom:4px}
+.sport-btn:hover,.sport-btn.active{border-color:var(--gold);color:var(--gold);background:var(--gold-bg)}
+.bet-input{width:100%;background:var(--navy);border:1px solid var(--navy-border);border-radius:var(--rs);padding:14px 16px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;resize:vertical;min-height:90px;outline:none;transition:border-color 0.2s}
+.bet-input:focus{border-color:var(--gold)}
+.bet-input::placeholder{color:var(--text-dim)}
+.text-input{width:100%;background:var(--navy);border:1px solid var(--navy-border);border-radius:var(--rs);padding:12px 16px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s;height:48px}
+.text-input:focus{border-color:var(--gold)}
+.or-row{text-align:center;color:var(--text-dim);font-size:11px;letter-spacing:2px;margin:12px 0;position:relative}
+.or-row::before,.or-row::after{content:'';position:absolute;top:50%;width:44%;height:1px;background:var(--navy-border)}
+.or-row::before{left:0}.or-row::after{right:0}
+.upload-btn{width:100%;padding:12px;border:1px dashed var(--navy-border);border-radius:var(--rs);background:transparent;color:var(--text-muted);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s}
+.upload-btn:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-bg)}
+.row{display:flex;gap:10px;margin-top:14px;align-items:center}
+.btn-gold{padding:13px 28px;background:var(--gold);color:var(--navy);border:none;border-radius:var(--rs);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s;white-space:nowrap}
+.btn-gold:hover{background:var(--gold-light);transform:scale(1.02)}
+.btn-gold:active{transform:scale(0.98)}
+.btn-gold:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.btn-out{padding:13px 28px;background:transparent;color:var(--gold);border:1px solid var(--gold);border-radius:var(--rs);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s;white-space:nowrap}
+.btn-out:hover{background:var(--gold-bg)}
+.spin-wrap{display:none;align-items:center;justify-content:center;gap:14px;padding:36px;color:var(--text-muted);font-size:14px}
+.spinner{width:22px;height:22px;border:2px solid var(--navy-border);border-top-color:var(--gold);border-radius:50%;animation:spin 0.7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.result{background:var(--navy-card);border:1px solid var(--navy-border);border-radius:var(--r);overflow:hidden;margin-bottom:20px;animation:fadeUp 0.35s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.result-hdr{padding:18px 24px;display:flex;align-items:flex-start;justify-content:space-between;border-bottom:1px solid var(--navy-border);gap:16px}
+.result-sport{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:4px}
+.result-title{font-size:17px;font-weight:600;line-height:1.3}
+.badge{font-size:11px;font-weight:700;letter-spacing:1.5px;padding:5px 16px;border-radius:20px;text-transform:uppercase;white-space:nowrap;flex-shrink:0}
+.badge-good{background:rgba(48,200,112,0.1);color:var(--green);border:1px solid var(--green)}
+.badge-bad{background:rgba(232,64,96,0.1);color:var(--red);border:1px solid var(--red)}
+.badge-neutral{background:rgba(90,180,224,0.1);color:var(--cyan);border:1px solid var(--cyan)}
+.result-body{padding:20px 24px}
+.meter-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px}
+.meter-label-txt{font-size:12px;color:var(--text-muted)}
+.meter-pct{font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:600}
+.pct-g{color:var(--green)}.pct-r{color:var(--red)}.pct-b{color:var(--cyan)}
+.meter-track{height:6px;background:var(--navy);border-radius:3px;overflow:hidden;margin-bottom:20px}
+.meter-fill{height:100%;border-radius:3px;transition:width 1s cubic-bezier(0.4,0,0.2,1)}
+.fill-g{background:linear-gradient(90deg,#1A9050,#30C870)}
+.fill-r{background:linear-gradient(90deg,#A02030,#E84060)}
+.fill-b{background:linear-gradient(90deg,#2A80A0,#5AB4E0)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.stat{background:var(--navy);border:1px solid var(--navy-border);border-radius:var(--rs);padding:12px 14px}
+.stat-lbl{font-size:10px;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:5px}
+.stat-val{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600}
+.ai-response{font-size:13.5px;color:var(--text-muted);line-height:1.75}
+.notice{background:rgba(90,180,224,0.04);border:1px solid rgba(90,180,224,0.12);border-radius:var(--rs);padding:11px 15px;font-size:11.5px;color:var(--text-dim);margin-top:14px;line-height:1.6}
+.mkt-hdr{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.mkt-name{font-family:'Cinzel',serif;font-size:26px;font-weight:900}
+.mkt-sub{font-size:12px;color:var(--text-muted)}
+.ticker-lbl{font-family:'Cinzel',serif;font-size:36px;font-weight:900;color:var(--gold)}
+.sig-badge{font-size:13px;font-weight:700;letter-spacing:2px;padding:7px 20px;border-radius:var(--rs);text-transform:uppercase}
+.sig-buy{background:rgba(48,200,112,0.1);color:var(--green);border:1px solid var(--green)}
+.sig-sell{background:rgba(232,64,96,0.1);color:var(--red);border:1px solid var(--red)}
+.sig-hold{background:rgba(90,180,224,0.1);color:var(--cyan);border:1px solid var(--cyan)}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px}
+.price-card{background:var(--navy-card);border:1px solid var(--navy-border);border-radius:var(--r);padding:28px 22px;text-align:center;position:relative;transition:transform 0.2s}
+.price-card:hover{transform:translateY(-3px)}
+.price-card.featured{border-color:var(--gold)}
+.pop-tag{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--navy);font-size:9px;font-weight:700;letter-spacing:2px;padding:4px 14px;border-radius:20px;white-space:nowrap;text-transform:uppercase}
+.price-tier{font-size:10px;font-weight:600;letter-spacing:3px;color:var(--text-muted);text-transform:uppercase;margin-bottom:10px}
+.price-amt{font-family:'Cinzel',serif;font-size:54px;font-weight:900;color:var(--gold);line-height:1}
+.price-per{font-size:12px;color:var(--text-dim);margin-bottom:20px;margin-top:4px}
+.price-feats{list-style:none;text-align:left;font-size:12.5px;color:var(--text-muted);margin-bottom:22px}
+.price-feats li{padding:5px 0;display:flex;align-items:center;gap:9px}
+.price-feats li::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--gold);flex-shrink:0}
+.chatbot{position:fixed;bottom:24px;right:24px;z-index:300}
+.chat-toggle{width:54px;height:54px;border-radius:50%;background:var(--gold);border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(212,146,12,0.4);transition:all 0.2s}
+.chat-toggle:hover{transform:scale(1.08)}
+.chat-win{position:absolute;bottom:66px;right:0;width:310px;background:var(--navy-card);border:1px solid var(--navy-border);border-radius:var(--r);display:none;flex-direction:column;overflow:hidden;box-shadow:0 12px 48px rgba(0,0,0,0.7)}
+.chat-win.open{display:flex}
+.chat-head{padding:13px 16px;background:var(--gold);color:var(--navy);font-weight:700;font-size:13px;display:flex;align-items:center;gap:8px}
+.chat-msgs{padding:14px;height:220px;overflow-y:auto;display:flex;flex-direction:column;gap:9px;font-size:12.5px}
+.msg{padding:9px 12px;border-radius:10px;max-width:88%;line-height:1.45}
+.msg-bot{background:var(--navy);color:var(--text);align-self:flex-start;border-bottom-left-radius:2px}
+.msg-user{background:var(--gold);color:var(--navy);align-self:flex-end;font-weight:500;border-bottom-right-radius:2px}
+.chat-in-row{display:flex;gap:7px;padding:10px;border-top:1px solid var(--navy-border)}
+.chat-field{flex:1;background:var(--navy);border:1px solid var(--navy-border);border-radius:20px;padding:7px 14px;color:var(--text);font-size:12px;outline:none;font-family:'DM Sans',sans-serif}
+.chat-send{background:var(--gold);border:none;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+@media(max-width:640px){
+  .hero{padding:18px}.hero-logo{font-size:52px}.hero-icons{gap:14px}
+  .stats{grid-template-columns:repeat(2,1fr)}.pricing-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-top">
+    <div class="pill pill-out">Sports Bot AI LLC</div>
+    <div class="pill pill-fill">Pro Edition</div>
+  </div>
+  <div class="hero-center">
+    <div class="eyebrow">Bet &amp; Trade Intelligence</div>
+    <div class="hero-logo">BET <span>IQ</span></div>
+    <div class="hero-tagline">Comprehensive AI Analysis</div>
+    <div class="hero-divider"></div>
+    <div class="hero-by">by <strong>SportsBotAi</strong></div>
+  </div>
+  <div class="hero-icons">
+    <div class="hi" onclick="switchTab('sports',0)"><div class="hi-circle">🏆</div><div class="hi-label">Sports</div></div>
+    <div class="hi" onclick="switchTab('kalshi',1)"><div class="hi-circle">📈</div><div class="hi-label">Kalshi</div></div>
+    <div class="hi" onclick="switchTab('poly',2)"><div class="hi-circle">🔮</div><div class="hi-label">Polymarket</div></div>
+    <div class="hi" onclick="switchTab('trade',3)"><div class="hi-circle">📊</div><div class="hi-label">TradeViewer</div></div>
+    <div class="hi" onclick="switchTab('pricing',4)"><div class="hi-circle">💎</div><div class="hi-label">Pricing</div></div>
+  </div>
+</div>
+
+<div class="nav-wrap">
+  <nav class="nav">
+    <button class="nav-tab active" onclick="switchTab('sports',0)">🏆 Sports Bets</button>
+    <button class="nav-tab" onclick="switchTab('kalshi',1)">📈 Kalshi</button>
+    <button class="nav-tab" onclick="switchTab('poly',2)">🔮 Polymarket</button>
+    <button class="nav-tab" onclick="switchTab('trade',3)">📊 TradeViewer</button>
+    <button class="nav-tab" onclick="switchTab('pricing',4)">💎 Go Pro</button>
+  </nav>
+</div>
+
+<div class="main">
+
+  <div class="usage">
+    <span>Free trial · searches today:</span>
+    <div class="dots" id="usageDots">
+      <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div>
+      <div class="dot"></div><div class="dot"></div>
+    </div>
+    <span id="usageCount">3 / 5</span>
+    <button class="upg" onclick="switchTab('pricing',4)">Upgrade to Pro ↗</button>
+  </div>
+
+  <!-- SPORTS -->
+  <div class="section active" id="sec-sports">
+    <div class="card">
+      <div class="card-label">Select Sport</div>
+      <div class="sport-grid">
+        <button class="sport-btn active" onclick="setSport(this,'NBA')"><span>🏀</span>NBA</button>
+        <button class="sport-btn" onclick="setSport(this,'NFL')"><span>🏈</span>NFL</button>
+        <button class="sport-btn" onclick="setSport(this,'MLB')"><span>⚾</span>MLB</button>
+        <button class="sport-btn" onclick="setSport(this,'NHL')"><span>🏒</span>NHL</button>
+        <button class="sport-btn" onclick="setSport(this,'Soccer')"><span>⚽</span>Soccer</button>
+        <button class="sport-btn" onclick="setSport(this,'NCAAB')"><span>🏀</span>NCAAB</button>
+        <button class="sport-btn" onclick="setSport(this,'NCAAF')"><span>🏈</span>NCAAF</button>
+        <button class="sport-btn" onclick="setSport(this,'Tennis')"><span>🎾</span>Tennis</button>
+        <button class="sport-btn" onclick="setSport(this,'MMA')"><span>🥊</span>MMA</button>
+        <button class="sport-btn" onclick="setSport(this,'Table Tennis')"><span>🏓</span>Table TN</button>
+      </div>
+      <div class="card-label">Enter Your Bet</div>
+      <textarea class="bet-input" id="betInput" placeholder="e.g. Lakers -5.5 vs Warriors · Steph Curry over 28.5 pts -110 · Chiefs moneyline -145..."></textarea>
+      <div class="or-row">OR</div>
+      <button class="upload-btn" onclick="fakeUpload()">📷 Upload Screenshot of Bet Slip</button>
+      <div class="row">
+        <button class="btn-gold" id="sports-btn" onclick="analyzeBet()">Analyze This Bet →</button>
+        <span style="font-size:12px;color:var(--text-dim)">Powered by Claude AI</span>
+      </div>
+    </div>
+    <div class="spin-wrap" id="sports-spin"><div class="spinner"></div> Analyzing with AI...</div>
+    <div id="sports-result"></div>
+  </div>
+
+  <!-- KALSHI -->
+  <div class="section" id="sec-kalshi">
+    <div class="card">
+      <div class="mkt-hdr">
+        <div class="mkt-name" style="color:#00D4AA">Kalshi</div>
+        <div class="mkt-sub">Event contract analysis</div>
+      </div>
+      <div class="card-label">Enter Kalshi Contract</div>
+      <textarea class="bet-input" id="kalshiInput" placeholder="e.g. Will the Fed cut rates in June? YES @ 34¢ · Will inflation exceed 3% in Q2? NO @ 58¢..."></textarea>
+      <div class="or-row">OR</div>
+      <button class="upload-btn" onclick="fakeUpload()">📷 Upload Kalshi Screenshot</button>
+      <div class="row">
+        <button class="btn-gold" id="kalshi-btn" onclick="analyzeMarket('kalshi')">Analyze Contract →</button>
+        <span style="font-size:12px;color:var(--text-dim)">Powered by Claude AI</span>
+      </div>
+    </div>
+    <div class="spin-wrap" id="kalshi-spin"><div class="spinner"></div> Analyzing contract...</div>
+    <div id="kalshi-result"></div>
+  </div>
+
+  <!-- POLYMARKET -->
+  <div class="section" id="sec-poly">
+    <div class="card">
+      <div class="mkt-hdr">
+        <div class="mkt-name" style="color:#9B80FF">Polymarket</div>
+        <div class="mkt-sub">Prediction market analysis</div>
+      </div>
+      <div class="card-label">Enter Polymarket Position</div>
+      <textarea class="bet-input" id="polyInput" placeholder="e.g. Will SpaceX reach orbit in 2025? YES 72¢ · Bitcoin above $100k by Dec? YES 44¢..."></textarea>
+      <div class="or-row">OR</div>
+      <button class="upload-btn" onclick="fakeUpload()">📷 Upload Polymarket Screenshot</button>
+      <div class="row">
+        <button class="btn-gold" id="poly-btn" onclick="analyzeMarket('poly')">Analyze Position →</button>
+        <span style="font-size:12px;color:var(--text-dim)">Powered by Claude AI</span>
+      </div>
+    </div>
+    <div class="spin-wrap" id="poly-spin"><div class="spinner"></div> Analyzing position...</div>
+    <div id="poly-result"></div>
+  </div>
+
+  <!-- TRADEVIEWER -->
+  <div class="section" id="sec-trade">
+    <div class="card">
+      <div class="mkt-hdr">
+        <div class="mkt-name" style="color:var(--gold)">TradeViewer</div>
+        <div class="mkt-sub">AI-powered buy / sell signal analysis</div>
+      </div>
+      <div class="card-label">Enter Ticker Symbol</div>
+      <div style="display:flex;gap:10px">
+        <input class="text-input" id="tickerInput" placeholder="e.g. AAPL, TSLA, SPY, BTC-USD..."/>
+        <button class="btn-gold" id="trade-btn" onclick="analyzeTrade()">Get Signal →</button>
+      </div>
+      <div class="or-row">OR</div>
+      <button class="upload-btn" onclick="fakeUpload()">📷 Upload TradingView Chart Screenshot</button>
+    </div>
+    <div class="spin-wrap" id="trade-spin"><div class="spinner"></div> Reading signals...</div>
+    <div id="trade-result"></div>
+    <div class="card">
+      <div class="card-label">Indicators Analyzed</div>
+      <div class="stats">
+        <div class="stat"><div class="stat-lbl">RSI (14)</div><div class="stat-val" style="color:var(--gold)">Momentum</div></div>
+        <div class="stat"><div class="stat-lbl">MACD</div><div class="stat-val" style="color:var(--green)">Crossover</div></div>
+        <div class="stat"><div class="stat-lbl">Volume</div><div class="stat-val" style="color:var(--cyan)">Profile</div></div>
+        <div class="stat"><div class="stat-lbl">Support / Resist</div><div class="stat-val">Levels</div></div>
+        <div class="stat"><div class="stat-lbl">EMA / SMA</div><div class="stat-val" style="color:var(--gold)">Trend</div></div>
+        <div class="stat"><div class="stat-lbl">Bollinger Bands</div><div class="stat-val" style="color:var(--red)">Squeeze</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRICING -->
+  <div class="section" id="sec-pricing">
+    <div style="text-align:center;margin-bottom:32px">
+      <div style="font-size:10px;font-weight:600;letter-spacing:4px;color:var(--text-dim);text-transform:uppercase;margin-bottom:8px">Choose Your Plan</div>
+      <div style="font-family:'Cinzel',serif;font-size:34px;font-weight:900;color:var(--text)">Simple Pricing</div>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-tier">Free Trial</div>
+        <div class="price-amt">$0</div>
+        <div class="price-per">7 days</div>
+        <ul class="price-feats">
+          <li>5 searches per day</li>
+          <li>Sports bet analysis</li>
+          <li>Kalshi contracts</li>
+          <li>Polymarket positions</li>
+          <li>AI-powered breakdowns</li>
+        </ul>
+        <button class="btn-out" style="width:100%">Current Plan</button>
+      </div>
+      <div class="price-card featured">
+        <div class="pop-tag">Most Popular</div>
+        <div class="price-tier">Pro</div>
+        <div class="price-amt">$29</div>
+        <div class="price-per">per month</div>
+        <ul class="price-feats">
+          <li>25 searches per day</li>
+          <li>All sports &amp; markets</li>
+          <li>TradeViewer signals</li>
+          <li>Screenshot upload</li>
+          <li>AI chat support</li>
+          <li>Full detailed analysis</li>
+        </ul>
+        <button class="btn-gold" style="width:100%" onclick="goCheckout('pro')">Upgrade to Pro</button>
+      </div>
+      <div class="price-card">
+        <div class="price-tier">Unlimited</div>
+        <div class="price-amt">$99</div>
+        <div class="price-per">per month</div>
+        <ul class="price-feats">
+          <li>Unlimited searches</li>
+          <li>Everything in Pro</li>
+          <li>Priority AI speed</li>
+          <li>API access</li>
+          <li>Discord alerts</li>
+          <li>Early feature access</li>
+        </ul>
+        <button class="btn-out" style="width:100%" onclick="goCheckout('unlimited')">Get Unlimited</button>
+      </div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div style="font-size:13px;color:var(--text-muted);line-height:1.8">
+        Powered by <strong style="color:var(--text)">Sports Bot AI LLC</strong>
+        &nbsp;·&nbsp; Secure payments via <strong style="color:var(--text)">Square</strong>
+        &nbsp;·&nbsp; Cancel anytime &nbsp;·&nbsp; No contracts &nbsp;·&nbsp; 7-day free trial
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="chatbot">
+  <div class="chat-win" id="chatWin">
+    <div class="chat-head">⚡ BET IQ Support</div>
+    <div class="chat-msgs" id="chatMsgs">
+      <div class="msg msg-bot">Hey! Ask me anything about BET IQ — sports bets, Kalshi, Polymarket, trading signals, or your account. 🏆</div>
+    </div>
+    <div class="chat-in-row">
+      <input class="chat-field" id="chatField" placeholder="Ask anything..." onkeydown="if(event.key==='Enter')sendChat()"/>
+      <button class="chat-send" onclick="sendChat()">↑</button>
+    </div>
+  </div>
+  <button class="chat-toggle" onclick="toggleChat()">💬</button>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// ⚠️  PASTE YOUR API KEY ONLY IN VERCEL ENV VARS
+//     Never share this key publicly
+//     In Vercel: Settings → Environment Variables
+//     Key name: ANTHROPIC_API_KEY
+// ─────────────────────────────────────────────
+const API_KEY = 'REPLACE_WITH_ENV_KEY';
+
+let sport = 'NBA';
+let chatOpen = false;
+let used = 3;
+const MAX = 5;
+
+function switchTab(name, idx) {
+  document.querySelectorAll('.nav-tab').forEach((t,i) => t.classList.toggle('active', i===idx));
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-'+name).classList.add('active');
+}
+
+function setSport(btn, s) {
+  document.querySelectorAll('.sport-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  sport = s;
+}
+
+function checkUsage() {
+  if (used >= MAX) {
+    alert('You\'ve used all 5 free searches today!\n\nUpgrade to Pro for 25 searches/day — just $29/month.');
+    switchTab('pricing', 4);
+    return false;
+  }
+  return true;
+}
+
+function bumpUsage() {
+  used++;
+  const dots = document.querySelectorAll('#usageDots .dot');
+  dots.forEach((d,i) => d.classList.toggle('on', i < used));
+  document.getElementById('usageCount').textContent = used + ' / ' + MAX;
+}
+
+async function ai(system, user) {
+  const r = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': API_KEY,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1024,
+      system,
+      messages: [{ role: 'user', content: user }]
+    })
+  });
+  if (!r.ok) { const e = await r.json(); throw new Error(e.error?.message || 'API error'); }
+  const d = await r.json();
+  return d.content[0].text;
+}
+
+function animateMeter(fillId, pctId, target) {
+  const fill = document.getElementById(fillId);
+  const pct = document.getElementById(pctId);
+  if (!fill || !pct) return;
+  let c = 0;
+  const iv = setInterval(() => {
+    c = Math.min(c + 2, target);
+    fill.style.width = c + '%';
+    pct.textContent = c + '%';
+    if (c >= target) clearInterval(iv);
+  }, 14);
+}
+
+function factorList(factors) {
+  return factors.map(f => `<li style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--navy-border);font-size:13px;color:var(--text-muted);line-height:1.5">
+    <div style="width:7px;height:7px;border-radius:50%;margin-top:5px;flex-shrink:0;background:${f.type==='pos'?'var(--green)':f.type==='neg'?'var(--red)':'var(--cyan)'}"></div>
+    <span>${f.text}</span>
+  </li>`).join('');
+}
+
+async function analyzeBet() {
+  if (!checkUsage()) return;
+  const bet = document.getElementById('betInput').value.trim();
+  if (!bet) { alert('Please enter a bet to analyze.'); return; }
+  const btn = document.getElementById('sports-btn');
+  const spin = document.getElementById('sports-spin');
+  const area = document.getElementById('sports-result');
+  btn.disabled = true; area.innerHTML = ''; spin.style.display = 'flex';
+  try {
+    const raw = await ai(
+      `You are BET IQ, an elite sports betting analyst AI by SportsBotAi. Analyze sports bets with sharp, data-driven insight. Respond ONLY in this exact JSON (no markdown, no extra text):
+{"verdict":"GOOD BET or BAD BET or FAIR BET","verdict_class":"good or bad or neutral","win_probability":<0-100>,"implied_odds":"<string>","true_odds":"<string>","edge":"<like +4.2% or -2.1%>","edge_color":"green or red","factors":[{"type":"pos or neg or neu","text":"<insight>"},{"type":"pos or neg or neu","text":"<insight>"},{"type":"pos or neg or neu","text":"<insight>"},{"type":"pos or neg or neu","text":"<insight>"}],"summary":"<2-3 sentence sharp betting take>"}`,
+      `Sport: ${sport}\nBet: ${bet}`
+    );
+    const d = JSON.parse(raw.replace(/```json|```/g,'').trim());
+    spin.style.display = 'none'; bumpUsage();
+    const pg = d.verdict_class==='good', pb = d.verdict_class==='bad';
+    area.innerHTML = `<div class="result">
+      <div class="result-hdr">
+        <div><div class="result-sport">${sport} · Bet Analysis</div><div class="result-title">${bet}</div></div>
+        <div class="badge ${pg?'badge-good':pb?'badge-bad':'badge-neutral'}">${d.verdict}</div>
+      </div>
+      <div class="result-body">
+        <div class="meter-row"><span class="meter-label-txt">Win Probability</span><span class="meter-pct ${pg?'pct-g':pb?'pct-r':'pct-b'}" id="mp">0%</span></div>
+        <div class="meter-track"><div class="meter-fill ${pg?'fill-g':pb?'fill-r':'fill-b'}" id="mf" style="width:0%"></div></div>
+        <div class="stats">
+          <div class="stat"><div class="stat-lbl">Implied Odds</div><div class="stat-val">${d.implied_odds}</div></div>
+          <div class="stat"><div class="stat-lbl">True Odds</div><div class="stat-val" style="color:var(--${d.edge_color==='green'?'green':'red'})">${d.true_odds}</div></div>
+          <div class="stat"><div class="stat-lbl">Edge</div><div class="stat-val" style="color:var(--${d.edge_color==='green'?'green':'red'})">${d.edge}</div></div>
+        </div>
+        <div class="card-label">Key Factors</div>
+        <ul style="list-style:none;margin-bottom:16px">${factorList(d.factors)}</ul>
+        <div class="card-label">AI Summary</div>
+        <div class="ai-response">${d.summary}</div>
+        <div class="notice">⚠️ BET IQ provides educational analysis only. Please gamble responsibly.</div>
+      </div>
+    </div>`;
+    animateMeter('mf','mp', d.win_probability);
+  } catch(e) {
+    spin.style.display = 'none';
+    area.innerHTML = `<div class="card" style="border-color:var(--red);color:var(--red);padding:20px">⚠️ Error: ${e.message}<br><br>Make sure your API key is set correctly.</div>`;
+  }
+  btn.disabled = false;
+}
+
+async function analyzeMarket(type) {
+  if (!checkUsage()) return;
+  const contract = document.getElementById(type+'Input').value.trim();
+  if (!contract) { alert('Please enter a contract to analyze.'); return; }
+  const isK = type==='kalshi';
+  const mkt = isK ? 'Kalshi' : 'Polymarket';
+  const col = isK ? '#00D4AA' : '#9B80FF';
+  const btn = document.getElementById(type+'-btn');
+  const spin = document.getElementById(type+'-spin');
+  const area = document.getElementById(type+'-result');
+  btn.disabled = true; area.innerHTML = ''; spin.style.display = 'flex';
+  try {
+    const raw = await ai(
+      `You are BET IQ, an expert ${mkt} prediction market analyst. Find edges vs real-world probabilities. Respond ONLY in this exact JSON:
+{"verdict":"STRONG EDGE or SLIGHT EDGE or FAIR VALUE or AVOID","verdict_class":"good or neutral or bad","market_prob":<0-100>,"betiq_estimate":<0-100>,"edge_pts":"<like +7 pts>","recommendation":"BUY YES or BUY NO or PASS","factors":[{"type":"pos or neg or neu","text":"<insight>"},{"type":"pos or neg or neu","text":"<insight>"},{"type":"pos or neg or neu","text":"<insight>"}],"summary":"<2-3 sentence sharp market take>"}`,
+      `Platform: ${mkt}\nContract: ${contract}`
+    );
+    const d = JSON.parse(raw.replace(/```json|```/g,'').trim());
+    spin.style.display = 'none'; bumpUsage();
+    const pg = d.verdict_class==='good', pb = d.verdict_class==='bad';
+    area.innerHTML = `<div class="result">
+      <div class="result-hdr">
+        <div><div class="result-sport" style="color:${col}">${mkt} · Event Contract</div><div class="result-title">${contract}</div></div>
+        <div class="badge ${pg?'badge-good':pb?'badge-bad':'badge-neutral'}">${d.verdict}</div>
+      </div>
+      <div class="result-body">
+        <div class="stats">
+          <div class="stat"><div class="stat-lbl">Market Probability</div><div class="stat-val">${d.market_prob}%</div></div>
+          <div class="stat"><div class="stat-lbl">BET IQ Estimate</div><div class="stat-val" style="color:${col}">${d.betiq_estimate}%</div></div>
+          <div class="stat"><div class="stat-lbl">Edge</div><div class="stat-val" style="color:var(--${pg?'green':pb?'red':'cyan'})">${d.edge_pts}</div></div>
+        </div>
+        <div style="display:inline-block;padding:8px 20px;border-radius:var(--rs);background:var(--gold-bg);border:1px solid var(--gold);font-size:13px;font-weight:700;color:var(--gold);margin-bottom:16px">Recommendation: ${d.recommendation}</div>
+        <div class="card-label">Analysis</div>
+        <ul style="list-style:none;margin-bottom:16px">${factorList(d.factors)}</ul>
+        <div class="card-label">AI Summary</div>
+        <div class="ai-response">${d.summary}</div>
+        <div class="notice">⚠️ Prediction market analysis is for informational purposes only. Not financial advice.</div>
+      </div>
+    </div>`;
+  } catch(e) {
+    spin.style.display = 'none';
+    area.innerHTML = `<div class="card" style="border-color:var(--red);color:var(--red);padding:20px">⚠️ Error: ${e.message}</div>`;
+  }
+  btn.disabled = false;
+}
+
+async function analyzeTrade() {
+  if (!checkUsage()) return;
+  const ticker = document.getElementById('tickerInput').value.trim().toUpperCase();
+  if (!ticker) { alert('Please enter a ticker symbol.'); return; }
+  const btn = document.getElementById('trade-btn');
+  const spin = document.getElementById('trade-spin');
+  const area = document.getElementById('trade-result');
+  btn.disabled = true; area.innerHTML = ''; spin.style.display = 'flex';
+  try {
+    const raw = await ai(
+      `You are BET IQ TradeViewer, an expert technical analysis AI. Give sharp, actionable trading signals. Respond ONLY in this exact JSON:
+{"signal":"BUY or SELL or HOLD","signal_class":"buy or sell or hold","confidence":<0-100>,"rsi":"<value + reading>","macd":"<signal>","volume":"<analysis>","support":"<level>","resistance":"<level>","trend":"<description>","stop_loss":"<level>","target":"<level>","factors":[{"type":"pos or neg or neu","text":"<technical insight>"},{"type":"pos or neg or neu","text":"<technical insight>"},{"type":"pos or neg or neu","text":"<technical insight>"},{"type":"pos or neg or neu","text":"<technical insight>"}],"summary":"<2-3 sentence sharp trading take>"}`,
+      `Ticker: ${ticker}. Provide current technical analysis and trading signal based on typical technical indicators.`
+    );
+    const d = JSON.parse(raw.replace(/```json|```/g,'').trim());
+    spin.style.display = 'none'; bumpUsage();
+    const sc = d.signal_class;
+    area.innerHTML = `<div class="result">
+      <div class="result-hdr">
+        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+          <div class="ticker-lbl">${ticker}</div>
+          <div class="sig-badge ${sc==='buy'?'sig-buy':sc==='sell'?'sig-sell':'sig-hold'}">${sc==='buy'?'▲':sc==='sell'?'▼':'◆'} ${d.signal} SIGNAL</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text-muted)">Confidence: <span style="color:var(--gold)">${d.confidence}%</span></div>
+        </div>
+      </div>
+      <div class="result-body">
+        <div class="stats">
+          <div class="stat"><div class="stat-lbl">RSI (14)</div><div class="stat-val" style="color:var(--gold)">${d.rsi}</div></div>
+          <div class="stat"><div class="stat-lbl">MACD</div><div class="stat-val" style="color:var(--${sc==='buy'?'green':'red'})">${d.macd}</div></div>
+          <div class="stat"><div class="stat-lbl">Volume</div><div class="stat-val" style="color:var(--cyan)">${d.volume}</div></div>
+          <div class="stat"><div class="stat-lbl">Support</div><div class="stat-val">${d.support}</div></div>
+          <div class="stat"><div class="stat-lbl">Resistance</div><div class="stat-val">${d.resistance}</div></div>
+          <div class="stat"><div class="stat-lbl">Trend</div><div class="stat-val" style="color:var(--${sc==='buy'?'green':sc==='sell'?'red':'cyan'})">${d.trend}</div></div>
+        </div>
+        <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+          <div style="padding:8px 16px;border-radius:var(--rs);background:rgba(232,64,96,0.08);border:1px solid rgba(232,64,96,0.3);font-size:12px;color:var(--red)">Stop Loss: <strong>${d.stop_loss}</strong></div>
+          <div style="padding:8px 16px;border-radius:var(--rs);background:rgba(48,200,112,0.08);border:1px solid rgba(48,200,112,0.3);font-size:12px;color:var(--green)">Target: <strong>${d.target}</strong></div>
+        </div>
+        <div class="card-label">Signal Breakdown</div>
+        <ul style="list-style:none;margin-bottom:16px">${factorList(d.factors)}</ul>
+        <div class="card-label">AI Summary</div>
+        <div class="ai-response">${d.summary}</div>
+        <div class="notice">⚠️ Not financial advice. BET IQ signals are educational only. Always do your own research before trading.</div>
+      </div>
+    </div>`;
+  } catch(e) {
+    spin.style.display = 'none';
+    area.innerHTML = `<div class="card" style="border-color:var(--red);color:var(--red);padding:20px">⚠️ Error: ${e.message}</div>`;
+  }
+  btn.disabled = false;
+}
+
+async function sendChat() {
+  const field = document.getElementById('chatField');
+  const msgs = document.getElementById('chatMsgs');
+  const text = field.value.trim();
+  if (!text) return;
+  msgs.innerHTML += `<div class="msg msg-user">${text}</div>`;
+  field.value = '';
+  msgs.scrollTop = msgs.scrollHeight;
+  const botDiv = document.createElement('div');
+  botDiv.className = 'msg msg-bot';
+  botDiv.textContent = '...';
+  msgs.appendChild(botDiv);
+  try {
+    const reply = await ai(
+      'You are the BET IQ support assistant by SportsBotAi. Be helpful, friendly, concise — max 3 sentences. Answer questions about sports betting analysis, Kalshi, Polymarket, TradeViewer, pricing ($29 Pro / $99 Unlimited), and how BET IQ works.',
+      text
+    );
+    botDiv.textContent = reply;
+  } catch(e) {
+    botDiv.textContent = 'Our AI is warming up — try again in a moment or email support@sportsbotai.com';
+  }
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function toggleChat() {
+  chatOpen = !chatOpen;
+  document.getElementById('chatWin').classList.toggle('open', chatOpen);
+}
+
+function fakeUpload() {
+  alert('📷 Screenshot upload is a Pro feature!\n\nUpgrade to Pro ($29/mo) to analyze any bet slip, Kalshi contract, Polymarket position, or TradingView chart by screenshot.');
+}
+
+function goCheckout(plan) {
+  alert('💳 Redirecting to Square checkout for BET IQ ' + (plan==='pro' ? 'Pro — $29/mo' : 'Unlimited — $99/mo') + '\n\nThis connects to your live Square account once deployed.');
+}
+</script>
+</body>
+</html>
