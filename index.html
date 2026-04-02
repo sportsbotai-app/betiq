@@ -366,7 +366,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 //     In Vercel: Settings → Environment Variables
 //     Key name: ANTHROPIC_API_KEY
 // ─────────────────────────────────────────────
-const API_KEY = 'REPLACE_WITH_ENV_KEY';
+// API calls are handled securely via /api/analyze backend
 
 let sport = 'NBA';
 let chatOpen = false;
@@ -402,24 +402,14 @@ function bumpUsage() {
 }
 
 async function ai(system, user) {
-  const r = await fetch('https://api.anthropic.com/v1/messages', {
+  const r = await fetch('/api/analyze', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': API_KEY,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 1024,
-      system,
-      messages: [{ role: 'user', content: user }]
-    })
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ system, user })
   });
-  if (!r.ok) { const e = await r.json(); throw new Error(e.error?.message || 'API error'); }
+  if (!r.ok) { const e = await r.json(); throw new Error(e.error || 'API error'); }
   const d = await r.json();
-  return d.content[0].text;
+  return d.result;
 }
 
 function animateMeter(fillId, pctId, target) {
